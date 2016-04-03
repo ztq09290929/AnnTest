@@ -10,11 +10,12 @@ import mnist_loader
 import saveData
     
 if __name__ == '__main__':
-    bTrain = True
-    if False:    
+    bTrain = False
+    if bTrain:    
        # trainingdata, validationdata, testdata = mnist_loader.load_data_wrapper()
         trainingdata, testdata = mnist_loader.load_data_wrapper_my()
         print 'The sum of trainingdata is: ',len(trainingdata)
+        print 'The sum of testdata is: ',len(testdata)
         #net = network.Network([784,30,10])
         net = network.Network([1024,30,10])
         print 'The num of neural :',net.sizes
