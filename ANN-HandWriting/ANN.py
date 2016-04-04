@@ -21,7 +21,7 @@ if __name__ == '__main__':
         print 'The num of neural :',net.sizes
         print 'Start training...'
         #net.SGD(trainingdata, 30, 10, 3.0, test_data=testdata)
-        net.SGD(trainingdata, 30, 10, 1.5, test_data=testdata)
+        net.SGD(trainingdata, 40, 10, 1.5, test_data=testdata)
         print 'Training complete!'
         saveData.storeData([net.weights, net.biases],'AnnTrainedParas.txt')
         print 'Saving paras complete! \nThe form is list[weights, biases].'

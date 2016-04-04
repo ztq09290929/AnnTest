@@ -85,35 +85,35 @@ def vectorized_result(j):
     e[j] = 1.0
     return e
 
-def img2vector(filename):
-    returnVect = np.zeros((1024,1))
-    fr = open(filename)
+def img2vector(_filename):
+    return_vect = np.zeros((1024,1))
+    fr = open(_filename)
     for i in range(32):
-        lineStr = fr.readline()
+        line_str = fr.readline()
         for j in range(32):
-            returnVect[32*i+j , 0] = int(lineStr[j])
-    return returnVect
+            return_vect[32*i+j , 0] = int(line_str[j])
+    return return_vect
 
-def load_data_wrapper_my(_trainFilePath = '/home/ztq/GitWorkSpace/AnnTest/ANN-HandWriting/trainingDigits', _testFilePath = '/home/ztq/GitWorkSpace/AnnTest/ANN-HandWriting/testDigits'):
-    trainingFileList = listdir(_trainFilePath)
-    testFileList = listdir(_testFilePath)
+def load_data_wrapper_my(_train_file_path = '/home/ztq/GitWorkSpace/AnnTest/ANN-HandWriting/trainingDigits', _test_file_path = '/home/ztq/GitWorkSpace/AnnTest/ANN-HandWriting/testDigits'):
+    train_file_list = listdir(_train_file_path)
+    test_file_list = listdir(_test_file_path)
     
-    trainingInputs = []
-    trainingResults = []
-    for fileName in trainingFileList:
-        trainingInputs.append(img2vector(_trainFilePath +'/' + fileName ))
-        tempClass = np.zeros((10,1))
-        tempClass[int( fileName.split('.')[0].split('_')[0] ) , 0 ] = 1.0
-        trainingResults.append( tempClass )
-    trainingData = zip(trainingInputs,trainingResults)
+    train_inputs = []
+    train_results = []
+    for file_name in train_file_list:
+        train_inputs.append(img2vector(_train_file_path +'/' + file_name ))
+        temp_class = np.zeros((10,1))
+        temp_class[int( file_name.split('_')[0] ) , 0 ] = 1.0
+        train_results.append( temp_class )
+    train_data = zip(train_inputs , train_results)
     
-    testInputs = []
-    testResults = []
-    for fileName in testFileList:
-        testInputs.append(img2vector(_testFilePath + '/' + fileName))
-        testResults.append( int(fileName.split('_')[0]) )
-    testData = zip(testInputs, testResults)
+    test_inputs = []
+    test_results = []
+    for file_name in test_file_list:
+        test_inputs.append(img2vector(_test_file_path + '/' + file_name))
+        test_results.append( int(file_name.split('_')[0]) )
+    test_data = zip(test_inputs, test_results)
     
-    return (trainingData , testData)
+    return (train_data , test_data)
     
     
