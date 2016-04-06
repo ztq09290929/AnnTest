@@ -10,7 +10,7 @@ def findROI(image):
     #dilate = cv2.dilate(binary,element)#用椭圆结构元素进行前景的膨胀
     binaryImg = binary.copy()#备份膨胀后的二值图像
     
-    contours, hierarchy = cv2.findContours(binary,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)#寻找轮廓
+    binary, contours, hierarchy = cv2.findContours(binary,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)#寻找轮廓
     if len(contours)>1:
         raise Exception("轮廓数量多于1！")
         return
@@ -38,10 +38,10 @@ def roiTo32(roi):
     
 #将32*32的图像转化为一个1024长度的只包含0和1的一维向量
 def roi2Vect(roi):
-    returnVect = zeros((1,1024))
+    returnVect = zeros((1024,1))
     for i in range(32):
         for j in range(32):
-            returnVect[0,i*32+j] = int(roi[i,j]/255)
+            returnVect[i*32+j,0] = int(roi[i,j]/255)
     return returnVect
     
     
