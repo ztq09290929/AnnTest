@@ -12,7 +12,7 @@ import functionsCV as cv
 import cv2
     
 if __name__ == '__main__':
-    bTrain = False
+    bTrain = True
     if bTrain:    
        # trainingdata, validationdata, testdata = mnist_loader.load_data_wrapper()
         trainingdata, testdata = mnist_loader.load_data_wrapper_my()
