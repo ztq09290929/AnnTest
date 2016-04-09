@@ -37,11 +37,24 @@ def roiTo32(roi):
     return binary
     
 #将32*32的图像转化为一个1024长度的只包含0和1的一维向量
-def roi2Vect(roi):
+def roi2Vect1024(roi):
     returnVect = zeros((1024,1))
     for i in range(32):
         for j in range(32):
             returnVect[i*32+j,0] = int(roi[i,j]/255)
     return returnVect
     
+#将包含数字的ROI缩小为28*28
+def roiTo28(roi):
+    returnROI = zeros((28,28),dtype = uint8)
+    cv2.resize(roi,(28,28),returnROI)
+    retval, binary = cv2.threshold(returnROI, 1 , 255, cv2.THRESH_BINARY);
+    return binary
     
+#将28*28的图像转化为一个784长度的只包含0和1的一维向量
+def roi2Vect784(roi):
+    returnVect = zeros((784,1))
+    for i in range(28):
+        for j in range(28):
+            returnVect[i*28+j,0] = int(roi[i,j]/255)
+    return returnVect

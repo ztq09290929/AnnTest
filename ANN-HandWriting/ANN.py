@@ -12,7 +12,7 @@ import functionsCV as cv
 import cv2
     
 if __name__ == '__main__':
-    bTrain = True
+    bTrain = False
     if bTrain:    
        # trainingdata, validationdata, testdata = mnist_loader.load_data_wrapper()
         trainingdata, testdata = mnist_loader.load_data_wrapper_my()
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         
     while(True):
         #获取摄像头
-        capture = cv2.VideoCapture(1)
+        capture = cv2.VideoCapture(0)
         success,frame = capture.read()
         print "进行一次抓拍，按ESC完成抓拍"
         #进入循环，抓取图像
@@ -52,8 +52,9 @@ if __name__ == '__main__':
             success,frame = capture.read()
             #设置ROI区域
             cv2.rectangle(frame,(int(3*frame.shape[1]/8),int(3*frame.shape[0]/8)),(int(5*frame.shape[1]/8),int(5*frame.shape[0]/8)),[0,0,255])
-            cv2.imshow('frame',frame)
-            if (cv2.waitKey(1) == 1048603):
+            cv2.imshow('frame',frame) 
+            #if (cv2.waitKey(1) == 1048603):
+            if (cv2.waitKey(1) == 27):
                 capture.release()
                 break
         cv2.destroyAllWindows()
@@ -64,7 +65,7 @@ if __name__ == '__main__':
         #提取包围数字的最小ROI,转化为32*32大小，并存入一个向量之中
         roi = cv.findROI(img)
         roi32 = cv.roiTo32(roi)
-        vec1024 = cv.roi2Vect(roi32)
+        vec1024 = cv.roi2Vect1024(roi32)
     
         #开始分类
         print "识别结果： ",net2.predict(vec1024)       
@@ -73,6 +74,7 @@ if __name__ == '__main__':
         cv2.imshow('roi',roi32)
         char = cv2.waitKey()
         cv2.destroyAllWindows()
-        if char == 1048603 :break
+        #if char == 1048603 :break
+        if char == 27 :break
     
     
