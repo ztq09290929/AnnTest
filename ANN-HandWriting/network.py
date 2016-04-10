@@ -69,6 +69,8 @@ class Network(object):
                     j, self.evaluate(test_data), n_test)
             else:
                 print "Epoch {0} complete".format(j)
+                
+            print "Epoch {0}: cost = ".format(j),self.cost_val(training_data)
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
@@ -134,6 +136,15 @@ class Network(object):
         """Return the vector of partial derivatives \partial C_x /
         \partial a for the output activations."""
         return (output_activations-y)
+    
+    def cost_val(self, training_data):
+        """Return the value of the cost function. Used only for trainingdata."""
+        n  = float(len(training_data))
+        C = 0
+        for x,y in training_data:
+            d = self.feedforward(x) - y
+            C += float(np.sum(d**2))
+        return C/n/2.0
 
 #### Miscellaneous functions
 def sigmoid(z):

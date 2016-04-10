@@ -12,9 +12,9 @@ import functionsCV as cv
 import cv2
     
 if __name__ == '__main__':
-    bTrain = False
+    bTrain = True
     if bTrain:    
-       # trainingdata, validationdata, testdata = mnist_loader.load_data_wrapper()
+        #trainingdata, validationdata, testdata = mnist_loader.load_data_wrapper()
         trainingdata, testdata = mnist_loader.load_data_wrapper_my()
         print 'The sum of trainingdata is: ',len(trainingdata)
         print 'The sum of testdata is: ',len(testdata)
@@ -23,15 +23,17 @@ if __name__ == '__main__':
         print 'The num of neural :',net.sizes
         print 'Start training...'
         #net.SGD(trainingdata, 30, 10, 3.0, test_data=testdata)
-        net.SGD(trainingdata, 40, 10, 1.5, test_data=testdata)
+        net.SGD(trainingdata, 30, 5, 1.5, test_data=testdata)
         print 'Training complete!'
-        saveData.storeData([net.weights, net.biases],'AnnTrainedParas.txt')
+        #saveData.storeData([net.weights, net.biases],'AnnTrainedParas.txt')
+        saveData.storeData([net.weights, net.biases],'AnnTrainedParasMy.txt')
         print 'Saving paras complete! \nThe form is list[weights, biases].'
 
     #net2 = network.Network([784,30,10])
     net2 = network.Network([1024,30,10])
     print 'before:',net2.biases
-    paras = saveData.grabData('AnnTrainedParas.txt')
+    #paras = saveData.grabData('AnnTrainedParas.txt')
+    paras = saveData.grabData('AnnTrainedParasMy.txt')
     net2.weights = paras[0]
     net2.biases = paras[1]
     print 'after:',net2.biases
@@ -62,8 +64,12 @@ if __name__ == '__main__':
         #截取ROI部分
         img = frame[int(3*frame.shape[0]/8)+2:int(5*frame.shape[0]/8)-1,int(3*frame.shape[1]/8)+2:int(5*frame.shape[1]/8)-1,:].copy()
     
-        #提取包围数字的最小ROI,转化为32*32大小，并存入一个向量之中
         roi = cv.findROI(img)
+        #提取包围数字的最小ROI,转化为28*28大小，并存入一个向量之中
+        #roi28 = cv.roiTo28(roi)
+       # vec784 = cv.roi2Vect784(roi28)
+        
+        #提取包围数字的最小ROI,转化为32*32大小，并存入一个向量之中
         roi32 = cv.roiTo32(roi)
         vec1024 = cv.roi2Vect1024(roi32)
     
