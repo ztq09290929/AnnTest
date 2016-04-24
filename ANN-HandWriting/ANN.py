@@ -27,60 +27,62 @@ if __name__ == '__main__':
         print 'Training complete!'
         #saveData.storeData([net.weights, net.biases],'AnnTrainedParas.txt')
         saveData.storeData([net.weights, net.biases],'AnnTrainedParasMy.txt')
-        print 'Saving paras complete! \nThe form is list[weights, biases].'
-
-    #net2 = network.Network([784,30,10])
-    net2 = network.Network([1024,30,10])
-    print 'before:',net2.biases
-    #paras = saveData.grabData('AnnTrainedParas.txt')
-    paras = saveData.grabData('AnnTrainedParasMy.txt')
-    net2.weights = paras[0]
-    net2.biases = paras[1]
-    print 'after:',net2.biases
-    print "各层偏置的维数："
-    for a in net2.biases:
-        print a.shape
-    print "各层权值的维数："
-    for b in net2.weights:
-        print b.shape
-        
-    while(True):
-        #获取摄像头
-        capture = cv2.VideoCapture(0)
-        success,frame = capture.read()
-        print "进行一次抓拍，按ESC完成抓拍"
-        #进入循环，抓取图像
-        while success:
+        print 'Saving paras complete! \nThe form is list[weights, biases].'       
+        net.show_results()
+    
+    else:
+        #net2 = network.Network([784,30,10])
+        net2 = network.Network([1024,30,10])
+        print 'before:',net2.biases
+        #paras = saveData.grabData('AnnTrainedParas.txt')
+        paras = saveData.grabData('AnnTrainedParasMy.txt')
+        net2.weights = paras[0]
+        net2.biases = paras[1]
+        print 'after:',net2.biases
+        print "各层偏置的维数："
+        for a in net2.biases:
+            print a.shape
+        print "各层权值的维数："
+        for b in net2.weights:
+            print b.shape
+            
+        while(True):
+            #获取摄像头
+            capture = cv2.VideoCapture(0)
             success,frame = capture.read()
-            #设置ROI区域
-            cv2.rectangle(frame,(int(3*frame.shape[1]/8),int(3*frame.shape[0]/8)),(int(5*frame.shape[1]/8),int(5*frame.shape[0]/8)),[0,0,255])
-            cv2.imshow('frame',frame) 
-            #if (cv2.waitKey(1) == 1048603):
-            if (cv2.waitKey(1) == 27):
-                capture.release()
-                break
-        cv2.destroyAllWindows()
-    
-        #截取ROI部分
-        img = frame[int(3*frame.shape[0]/8)+2:int(5*frame.shape[0]/8)-1,int(3*frame.shape[1]/8)+2:int(5*frame.shape[1]/8)-1,:].copy()
-    
-        roi = cv.findROI(img)
-        #提取包围数字的最小ROI,转化为28*28大小，并存入一个向量之中
-        #roi28 = cv.roiTo28(roi)
-       # vec784 = cv.roi2Vect784(roi28)
+            print "进行一次抓拍，按ESC完成抓拍"
+            #进入循环，抓取图像
+            while success:
+                success,frame = capture.read()
+                #设置ROI区域
+                cv2.rectangle(frame,(int(3*frame.shape[1]/8),int(3*frame.shape[0]/8)),(int(5*frame.shape[1]/8),int(5*frame.shape[0]/8)),[0,0,255])
+                cv2.imshow('frame',frame) 
+                if (cv2.waitKey(1) == 1048603):
+                #if (cv2.waitKey(1) == 27):
+                    capture.release()
+                    break
+            cv2.destroyAllWindows()
         
-        #提取包围数字的最小ROI,转化为32*32大小，并存入一个向量之中
-        roi32 = cv.roiTo32(roi)
-        vec1024 = cv.roi2Vect1024(roi32)
-    
-        #开始分类
-        print "识别结果： ",net2.predict(vec1024)       
-    
-        #显示32*32图像，并等待循环
-        cv2.imshow('roi',roi32)
-        char = cv2.waitKey()
-        cv2.destroyAllWindows()
-        #if char == 1048603 :break
-        if char == 27 :break
+            #截取ROI部分
+            img = frame[int(3*frame.shape[0]/8)+2:int(5*frame.shape[0]/8)-1,int(3*frame.shape[1]/8)+2:int(5*frame.shape[1]/8)-1,:].copy()
+        
+            roi = cv.findROI(img)
+            #提取包围数字的最小ROI,转化为28*28大小，并存入一个向量之中
+            #roi28 = cv.roiTo28(roi)
+           # vec784 = cv.roi2Vect784(roi28)
+            
+            #提取包围数字的最小ROI,转化为32*32大小，并存入一个向量之中
+            roi32 = cv.roiTo32(roi)
+            vec1024 = cv.roi2Vect1024(roi32)
+        
+            #开始分类
+            print "识别结果： ",net2.predict(vec1024)       
+        
+            #显示32*32图像，并等待循环
+            cv2.imshow('roi',roi32)
+            char = cv2.waitKey()
+            cv2.destroyAllWindows()
+            if char == 1048603 :break
+            #if char == 27 :break
     
     

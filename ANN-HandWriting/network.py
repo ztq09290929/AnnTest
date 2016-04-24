@@ -15,6 +15,7 @@ import random
 
 # Third-party libraries
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Network(object):
 
@@ -34,6 +35,9 @@ class Network(object):
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
         self.weights = [np.random.randn(y, x)
                         for x, y in zip(sizes[:-1], sizes[1:])]
+        self.train_costs = []
+        self.train_accuracy = []
+        self.test_accuracy = []
 
     def feedforward(self, a):
         """Return the output of the network if ``a`` is input."""
@@ -42,7 +46,7 @@ class Network(object):
         return a
     
     def predict(self, a):
-        """Teturn the prediction result."""
+        """Teturn the prediction result(index)."""
         return np.argmax(self.feedforward(a))
 
     def SGD(self, training_data, epochs, mini_batch_size, eta,
@@ -65,12 +69,15 @@ class Network(object):
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
+                n_correct = float(self.evaluate(test_data))
                 print "Epoch {0}: {1} / {2}".format(
-                    j, self.evaluate(test_data), n_test)
+                    j,n_correct , n_test)
+                self.test_accuracy.append(float('%.4f'%(n_correct/n_test)))
             else:
                 print "Epoch {0} complete".format(j)
-                
-            print "Epoch {0}: cost = ".format(j),self.cost_val(training_data)
+            
+            self.train_costs.append(self.cost_val(training_data))
+            print "Epoch {0}: cost = ".format(j),self.train_costs[-1]
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
@@ -141,11 +148,34 @@ class Network(object):
         """Return the value of the cost function. Used only for trainingdata."""
         n  = float(len(training_data))
         C = 0
+        n_correct = 0.0
         for x,y in training_data:
-            d = self.feedforward(x) - y
+            a = self.feedforward(x) 
+            d = a - y
             C += float(np.sum(d**2))
+            n_correct += (vec_2_label(a) == vec_2_label(y))
+        self.train_accuracy.append(float('%.4f'%(n_correct / len(training_data))))#By the way, save the train accuracy.
         return C/n/2.0
-
+    
+    def show_results(self):
+        """Print the training results(train_accuracy,train_costs,test_accuracy)"""
+        print 'train_accuracy = ',self.train_accuracy
+        print 'train_costs = ',self.train_costs
+        print 'test_accuracy = ',self.test_accuracy
+        x = range(len(self.train_accuracy))
+        plt.figure(1)
+        ax = plt.subplot(211)
+        l1, = ax.plot(x,self.train_accuracy,'r',label = "train accuracy")
+        l2, = ax.plot(x,self.test_accuracy,'b',label = 'test accuracy')
+        handles, labels = ax.get_legend_handles_labels()
+        ax.legend(handles[::-1], labels[::-1],loc = 'lower right')
+        ax.grid(True)
+        bx =plt.subplot(212)
+        l3, = bx.plot(x,self.train_costs,'b',label = "train cost")
+        handles, labels = bx.get_legend_handles_labels()
+        bx.legend(handles[::-1], labels[::-1])
+        bx.grid(True)
+        plt.show()
 #### Miscellaneous functions
 def sigmoid(z):
     """The sigmoid function."""
@@ -154,3 +184,13 @@ def sigmoid(z):
 def sigmoid_prime(z):
     """Derivative of the sigmoid function."""
     return sigmoid(z)*(1-sigmoid(z))
+
+def vec_2_label(_vec):
+    """Transform the vector label to a single number label."""
+    return np.argmax(_vec)
+
+def label_2_vec(_label, _length):
+    """Transform a single number label to a vector label."""    
+    return_vec = np.zeros((_length,1))
+    return_vec[int(_label),0] = 1.0
+    return return_vec
