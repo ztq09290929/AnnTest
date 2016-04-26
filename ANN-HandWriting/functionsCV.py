@@ -58,3 +58,9 @@ def roi2Vect784(roi):
         for j in range(28):
             returnVect[i*28+j,0] = int(roi[i,j]/255)
     return returnVect
+
+def Vec784ToImg(vec):
+    return_img= zeros((28,28),dtype = uint8)
+    for i in range(784):
+        return_img[i/28 , i%28] = vec[i , 0] * 255
+    return return_img
