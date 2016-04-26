@@ -14,19 +14,19 @@ import cv2
 if __name__ == '__main__':
     bTrain = True
     if bTrain:    
-        #trainingdata, validationdata, testdata = mnist_loader.load_data_wrapper()
-        trainingdata, testdata = mnist_loader.load_data_wrapper_my()
+        trainingdata, validationdata, testdata = mnist_loader.load_data_wrapper()
+        #trainingdata, testdata = mnist_loader.load_data_wrapper_my()
         print 'The sum of trainingdata is: ',len(trainingdata)
         print 'The sum of testdata is: ',len(testdata)
-        #net = network.Network([784,30,10])
-        net = network.Network([1024,30,10])
+        net = network.Network([784,30,10])
+        #net = network.Network([1024,30,10])
         print 'The num of neural :',net.sizes
         print 'Start training...'
-        #net.SGD(trainingdata, 30, 10, 3.0, test_data=testdata)
-        net.SGD(trainingdata, 30, 5, 1.5, test_data=testdata)
+        net.SGD(trainingdata, 40, 10, 1.2, test_data=testdata)
+        #net.SGD(trainingdata, 30, 5, 1.5, test_data=testdata)
         print 'Training complete!'
-        #saveData.storeData([net.weights, net.biases],'AnnTrainedParas.txt')
-        saveData.storeData([net.weights, net.biases],'AnnTrainedParasMy.txt')
+        saveData.storeData([net.weights, net.biases],'AnnTrainedParas.txt')
+        #saveData.storeData([net.weights, net.biases],'AnnTrainedParasMy.txt')
         print 'Saving paras complete! \nThe form is list[weights, biases].'       
         net.show_results()
     
