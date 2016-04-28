@@ -22,7 +22,8 @@ if __name__ == '__main__':
         #net = network.Network([1024,30,10])
         print 'The num of neural :',net.sizes
         print 'Start training...'
-        net.SGD(trainingdata, 40, 10, 1.2, test_data=testdata)
+        net.SGD(trainingdata, 40, 10, 1.2, test_data=testdata , weight_decay = 0)
+        #net.SGD(trainingdata, 40, 10, 0.5, test_data=testdata , weight_decay = 0.00005)#weight_decay权重衰减等同于加正则项解决过拟合
         #net.SGD(trainingdata, 30, 5, 1.5, test_data=testdata)
         print 'Training complete!'
         saveData.storeData([net.weights, net.biases],'AnnTrainedParas.txt')
