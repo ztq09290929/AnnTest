@@ -1,3 +1,4 @@
+# coding=utf-8
 """network2.py
 ~~~~~~~~~~~~~~
 
@@ -10,12 +11,12 @@ easily modifiable.  It is not optimized, and omits many desirable
 features.
 
 """
-
 #### Libraries
 # Standard library
 import json
 import random
 import sys
+import matplotlib.pyplot as plt
 
 # Third-party libraries
 import numpy as np
@@ -23,7 +24,7 @@ import numpy as np
 
 #### Define the quadratic and cross-entropy cost functions
 
-class QuadraticCost(object):
+class QuadraticCost(object):#二次代价函数
 
     @staticmethod
     def fn(a, y):
@@ -31,7 +32,7 @@ class QuadraticCost(object):
         ``y``.
 
         """
-        return 0.5*np.linalg.norm(a-y)**2
+        return 0.5*np.linalg.norm(a-y)**2#向量2范数的平方
 
     @staticmethod
     def delta(z, a, y):
@@ -330,3 +331,19 @@ def sigmoid(z):
 def sigmoid_prime(z):
     """Derivative of the sigmoid function."""
     return sigmoid(z)*(1-sigmoid(z))
+
+def show_result(ec,ea,tc,ta):
+    plt.figure(1)
+    ax = plt.subplot(211)
+    l1, = ax.plot(ta,'r',label = "train accuracy")
+    l2, = ax.plot(ea,'b',label = 'evaluation accuracy')
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(handles[::-1], labels[::-1],loc = 'lower right')
+    ax.grid(True)
+    bx =plt.subplot(212)
+    l3, = bx.plot(tc,'r',label = "train cost")
+    l4, = bx.plot(ec,'b',label = "evaluation cost")
+    handles, labels = bx.get_legend_handles_labels()
+    bx.legend(handles[::-1], labels[::-1],loc = 'center right')
+    bx.grid(True)
+    plt.show()
