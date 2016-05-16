@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 mnist_loader
 ~~~~~~~~~~~~
@@ -16,6 +17,16 @@ import gzip
 # Third-party libraries
 import numpy as np
 from os import listdir
+import matplotlib.pyplot as plt
+
+#共65种字符
+file_list = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E',\
+                'F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V',\
+                'W','X','Y','Z','zh_cuan','zh_e','zh_gan','zh_gan1','zh_gui',\
+                'zh_gui1','zh_hei','zh_hu','zh_ji','zh_jin','zh_jing','zh_jl',\
+                'zh_liao','zh_lu','zh_meng','zh_min','zh_ning','zh_qing',\
+                'zh_qiong','zh_shan','zh_su','zh_sx','zh_wan','zh_xiang',\
+                'zh_xin','zh_yu','zh_yu1','zh_yue','zh_yun','zh_zang','zh_zhe']
 
 def load_data():
     """Return the MNIST data as a tuple containing the training data,
@@ -85,7 +96,7 @@ def vectorized_result(j):
     e[j] = 1.0
     return e
 
-def img2vector(_filename):
+def file2vector(_filename):
     return_vect = np.zeros((1024,1))
     fr = open(_filename)
     for i in range(32):
@@ -101,7 +112,7 @@ def load_data_wrapper_my(_train_file_path = '/home/ztq/GitWorkSpace/AnnTest/ANN-
     train_inputs = []
     train_results = []
     for file_name in train_file_list:
-        train_inputs.append(img2vector(_train_file_path +'/' + file_name ))
+        train_inputs.append(file2vector(_train_file_path +'/' + file_name ))
         temp_class = np.zeros((10,1))
         temp_class[int( file_name.split('_')[0] ) , 0 ] = 1.0
         train_results.append( temp_class )
@@ -110,8 +121,40 @@ def load_data_wrapper_my(_train_file_path = '/home/ztq/GitWorkSpace/AnnTest/ANN-
     test_inputs = []
     test_results = []
     for file_name in test_file_list:
-        test_inputs.append(img2vector(_test_file_path + '/' + file_name))
+        test_inputs.append(file2vector(_test_file_path + '/' + file_name))
         test_results.append( int(file_name.split('_')[0]) )
+    test_data = zip(test_inputs, test_results)
+    
+    return (train_data , test_data)
+
+def img2vector(_filename,_n=20):
+    img = plt.imread(_filename)
+    return_vect = np.zeros((_n**2,1))
+    if len(img.shape) != 2:
+        raise Exception("图像通道数不是1")
+    for row in range(_n):
+        for col in range(_n):
+            return_vect[_n*row+col,0] = img[row,col]
+    return return_vect
+            
+def load_data_wrapper_lpr(_train_file_path = '/home/ztq/caffe/data/lpr/dataSet/trainData', _test_file_path = '/home/ztq/caffe/data/lpr/dataSet/testData'):
+    train_file_list = listdir(_train_file_path)
+    test_file_list = listdir(_test_file_path)
+    
+    train_inputs = []
+    train_results = []
+    for file_name in train_file_list:
+        train_inputs.append(img2vector(_train_file_path +'/' + file_name,20))
+        temp_class = np.zeros((65,1))
+        temp_class[ file_list.index(file_name.split('-')[0]) , 0 ] = 1.0
+        train_results.append( temp_class )
+    train_data = zip(train_inputs , train_results)
+    
+    test_inputs = []
+    test_results = []
+    for file_name in test_file_list:
+        test_inputs.append(img2vector(_test_file_path + '/' + file_name))
+        test_results.append(file_list.index(file_name.split('-')[0]))
     test_data = zip(test_inputs, test_results)
     
     return (train_data , test_data)

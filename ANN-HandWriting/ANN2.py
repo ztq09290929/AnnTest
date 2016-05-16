@@ -14,16 +14,19 @@ if __name__ == '__main__':
     bTrain = True
     if bTrain:    
         trainingdata, validationdata, testdata = mnist_loader.load_data_wrapper()
+        #trainingdata, validationdata= mnist_loader.load_data_wrapper_lpr()
         print 'The sum of trainingdata is: ',len(trainingdata)
         print 'The sum of validationdata is: ',len(validationdata)
         net = network2.Network([784,30,10],cost = network2.CrossEntropyCost)
+        #net = network2.Network([400,100,65],cost = network2.CrossEntropyCost)
         print 'The num of neural :',net.sizes
         print 'Start training...'
-        ec,ea,tc,ta = net.SGD(trainingdata, 30, 10, 0.5, \
+        ec,ea,tc,ta = net.SGD(trainingdata, 40, 20, 0.5, \
                         5.0,validationdata ,\
                         True,True,True,True)
         print 'Training complete!'
         net.save('AnnTrainedParas2.txt')
+        #net.save('AnnTrainedParas3.txt')
         print 'Saving paras complete! \nThe form is dict.'   
         ea = [item/float(len(validationdata)) for item in ea]
         ta = [item/float(len(trainingdata)) for item in ta]
